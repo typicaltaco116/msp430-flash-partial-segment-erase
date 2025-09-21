@@ -1,6 +1,7 @@
 "./main.obj"
 "./src/SRAM_subroutine_copy.obj"
 "./src/Serial.obj"
+"./src/event_timer.obj"
 "./src/flash_operations.obj"
 "../lnk_msp430f5529.cmd"
 -llibmath.a

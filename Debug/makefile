@@ -11,6 +11,7 @@ ORDERED_OBJS += \
 "./main.obj" \
 "./src/SRAM_subroutine_copy.obj" \
 "./src/Serial.obj" \
+"./src/event_timer.obj" \
 "./src/flash_operations.obj" \
 "../lnk_msp430f5529.cmd" \
 $(GEN_CMDS__FLAG) \
@@ -145,8 +146,8 @@ flash_partial_erase_operations.out: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 # Other Targets
 clean:
 	-$(RM) $(EXE_OUTPUTS__QUOTED)
-	-$(RM) "main.obj" "src/SRAM_subroutine_copy.obj" "src/Serial.obj" "src/flash_operations.obj" 
-	-$(RM) "main.d" "src/SRAM_subroutine_copy.d" "src/Serial.d" "src/flash_operations.d" 
+	-$(RM) "main.obj" "src/SRAM_subroutine_copy.obj" "src/Serial.obj" "src/event_timer.obj" "src/flash_operations.obj" 
+	-$(RM) "main.d" "src/SRAM_subroutine_copy.d" "src/Serial.d" "src/event_timer.d" "src/flash_operations.d" 
 	-@echo 'Finished clean'
 	-@echo ' '
 

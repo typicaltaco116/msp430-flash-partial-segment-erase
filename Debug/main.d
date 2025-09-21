@@ -19,7 +19,10 @@ main.obj: /home/deez/ti/ccs1281/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/incl
 main.obj: /home/deez/ti/ccs1281/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include/sys/_stdint.h
 main.obj: ../src/SRAM_subroutine_copy.h
 main.obj: ../src/Serial.h
+main.obj: ../src/event_timer.h
 main.obj: /home/deez/ti/ccs1281/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include/stdlib.h
+main.obj: /home/deez/ti/ccs1281/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include/stdio.h
+main.obj: /home/deez/ti/ccs1281/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include/stdarg.h
 
 ../main.c:
 
@@ -59,5 +62,11 @@ main.obj: /home/deez/ti/ccs1281/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/incl
 
 ../src/Serial.h:
 
+../src/event_timer.h:
+
 /home/deez/ti/ccs1281/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include/stdlib.h:
+
+/home/deez/ti/ccs1281/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include/stdio.h:
+
+/home/deez/ti/ccs1281/ccs/tools/compiler/ti-cgt-msp430_21.6.1.LTS/include/stdarg.h:
 
