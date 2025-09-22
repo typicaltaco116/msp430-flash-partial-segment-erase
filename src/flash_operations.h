@@ -28,3 +28,5 @@ void end_flash_segment_partial_erase_4(void);
 
 void flash_word_partial_write_10(uint16_t partialValue, uint16_t* targetPtr);
 void end_flash_word_partial_write_10(void);
+
+void flash_stress_segment(uint16_t val, uint16_t* seg_start, uint16_t seg_size, uint16_t count);

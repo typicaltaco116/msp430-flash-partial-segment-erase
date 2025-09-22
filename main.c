@@ -16,7 +16,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define INFO_FLASH_SEG_C_START 0x001880
+#define INFO_FLASH_SEG_C_START 0x01880
+#define F5529_FLASH_BANK_D    0x1C400     /* FLASH BANK D starts at 0x1_C400 and ends at 0x2_43FF */
 
 void init_and_wait(void);
 
@@ -29,14 +30,15 @@ int main(void)
   Serial0_setup();
 
   uint16_t* info_C_start = (void*)INFO_FLASH_SEG_C_START;
+  uint16_t* bank_D_seg_0 = (void*)F5529_FLASH_BANK_D;
 
   ///////////////////////////////////
   // Erase and reset entire segment
   ///////////////////////////////////
 
-  flash_segment_erase(info_C_start);
-  for(int i = 0; i < 64; i++)
-    flash_word_write(0x0000, info_C_start + i);
+  flash_segment_erase(bank_D_seg_0);
+  for(int i = 0; i < 256; i++)
+    flash_word_write(0x0000, bank_D_seg_0 + i);
 
   /////////////////////////////////
   // allocate memory for function
@@ -60,12 +62,12 @@ int main(void)
   // call SRAM copied function
   //////////////////////////////
   event_timer_start();
-  SRAM_flash_seg_part_erase_4(info_C_start);
+  SRAM_flash_seg_part_erase_4(bank_D_seg_0);
   event_timer_stop();
 
   free(space); // deallocate memory
 
-  char outStr[30];
+  char outStr[64];
   sprintf(outStr, "Time of erase operation: %u uS\n", _event_timer_value);
   Serial0_write(outStr);
 

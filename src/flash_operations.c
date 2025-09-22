@@ -80,3 +80,22 @@ void flash_word_partial_write_10(uint16_t partialValue, uint16_t* targetPtr)
   FCTL3 = FWPW + LOCK; // lock
 }
 void end_flash_word_partial_write_10(void) {}
+
+
+void flash_stress_segment(uint16_t val, uint16_t* seg_start, uint16_t seg_size, uint16_t count)
+// intended for stressing the 512 byte segments of flash blocks
+// uint16_t val is the bits to write into each item in the block.
+// uint16_t seg_size is the number of bytes in the target segment
+// uint16_t count is the amount of times to erase and program
+// Since erasing flash forces all bits high, a value of 0x0000 will result in
+//    the highest possible stresssing of all bits.
+{
+  uint16_t* target;
+  seg_size = seg_size >> 1; // convert to words
+  for (int i = 0; i < count; i++){
+    flash_segment_erase(seg_start);
+    target = seg_start;
+    while(target < segment + seg_size)
+      flash_word_write(val, target++);
+  }
+}
