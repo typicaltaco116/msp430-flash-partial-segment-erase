@@ -10,6 +10,6 @@ extern unsigned int _event_timer_value;
 
 void event_timer_start(void);
 
-void event_timer_stop(void)
+void event_timer_stop(void);
 
 //unsigned int event_timer_value(void);

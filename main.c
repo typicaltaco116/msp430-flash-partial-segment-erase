@@ -29,8 +29,13 @@ int main(void)
 
   Serial0_setup();
 
-  uint16_t* info_C_start = (void*)INFO_FLASH_SEG_C_START;
-  uint16_t* bank_D_seg_0 = (void*)F5529_FLASH_BANK_D;
+  flash_segment_s info_C_seg;
+  info_C_seg.startAddress = (void*)INFO_FLASH_SEG_C_START;
+  info_C_seg.size = 128;
+
+  flash_segment_s bank_D_seg_0;
+  bank_D_seg_0.startAddress = (void*)F5529_FLASH_BANK_D;
+  bank_D_seg_0.size = 512;
 
   ///////////////////////////////////
   // Erase and reset entire segment
@@ -38,7 +43,7 @@ int main(void)
 
   flash_segment_erase(bank_D_seg_0);
   for(int i = 0; i < 256; i++)
-    flash_word_write(0x0000, bank_D_seg_0 + i);
+    flash_word_write(0x0000, bank_D_seg_0.startAddress+ i);
 
   /////////////////////////////////
   // allocate memory for function
@@ -62,7 +67,7 @@ int main(void)
   // call SRAM copied function
   //////////////////////////////
   event_timer_start();
-  SRAM_flash_seg_part_erase_4(bank_D_seg_0);
+  SRAM_flash_seg_part_erase_4(bank_D_seg_0.startAddress);
   event_timer_stop();
 
   free(space); // deallocate memory
@@ -71,8 +76,18 @@ int main(void)
   sprintf(outStr, "Time of erase operation: %u uS\n", _event_timer_value);
   Serial0_write(outStr);
 
+  flash_stats_s bank_D_seg_0_stats;
+  flash_segment_stats(bank_D_seg_0, &bank_D_seg_0_stats, 0xFFFF);
+  sprintf(outStr, "------ Flash Stats ------\n");
+  Serial0_write(outStr);
+  sprintf(outStr, "Time to erase: %u uS\n", bank_D_seg_0_stats.erase_latency);
+  Serial0_write(outStr);
+  sprintf(outStr, "Time to write: %u uS\n", bank_D_seg_0_stats.write_latency);
+  Serial0_write(outStr);
+  sprintf(outStr, "Total bit errors: %u\n", bank_D_seg_0_stats.total_bit_errors);
+  Serial0_write(outStr);
+
   while(1);
-	
   return 0;
 }
 
