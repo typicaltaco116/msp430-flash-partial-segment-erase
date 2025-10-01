@@ -16,7 +16,6 @@ void Serial0_setup(void)
 }
 
 void Serial0_write(char* targetPtr)
-//currently does not use interrupts for filling the transmit buffer
 {
     while(*targetPtr) {
         while(!(UCA1IFG & UCTXIFG));

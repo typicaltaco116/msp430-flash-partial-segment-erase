@@ -12,3 +12,19 @@ void copy_subroutine(char* src_start, char* src_end, char* dst_start)
     src_start++;
   }
 }
+
+void* malloc_subroutine(void* src_start, void* src_end)
+/*
+   This function is intended to allocate space on the heap and copy
+   a subroutine into that space.
+   Space should be deallocated with free() when no longer needed.
+*/
+{
+  void* tempPtr = malloc(src_end - src_start);
+  if (!tempPtr)
+    return tempPtr; // not enough space in heap
+
+  copy_subroutine((char*)src_start, (char*)src_end, tempPtr);
+
+  return (void*)tempPtr;
+}

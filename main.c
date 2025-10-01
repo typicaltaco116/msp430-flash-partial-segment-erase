@@ -24,16 +24,20 @@ void init_and_wait(void);
 
 int main(void)
 {
+  void (*SRAM_f_seg_part_erase_4)(uint16_t*); // declare function pointer
+  char outStr[64];
+
+
   WDTCTL = WDTPW + WDTHOLD;	// stop watchdog timer
   init_and_wait(); // holds program until user presses KEY1
 
   Serial0_setup();
 
-  flash_segment_s info_C_seg;
+  f_segment_s info_C_seg;
   info_C_seg.startAddress = (void*)INFO_FLASH_SEG_C_START;
   info_C_seg.size = 128;
 
-  flash_segment_s bank_D_seg_0;
+  f_segment_s bank_D_seg_0;
   bank_D_seg_0.startAddress = (void*)F5529_FLASH_BANK_D;
   bank_D_seg_0.size = 512;
 
@@ -41,53 +45,26 @@ int main(void)
   // Erase and reset entire segment
   ///////////////////////////////////
 
-  flash_segment_erase(bank_D_seg_0);
+  f_segment_erase(bank_D_seg_0.startAddress);
   for(int i = 0; i < 256; i++)
-    flash_word_write(0x0000, bank_D_seg_0.startAddress+ i);
+    f_word_write(0x0000, bank_D_seg_0.startAddress+ i);
 
-  /////////////////////////////////
-  // allocate memory for function
-  /////////////////////////////////
-  char* space = (char*) malloc((void*)end_flash_segment_partial_erase_4 \
-      - (void*)flash_segment_partial_erase_4 + 1);
 
-  if (space == NULL)
-    return 1; // not enough room for function in the heap
-
-  //////////////////////////////
-  // copy function to SRAM
-  //////////////////////////////
-  copy_subroutine(flash_segment_partial_erase_4, \
-      end_flash_segment_partial_erase_4, space);
-
-  void (*SRAM_flash_seg_part_erase_4)(uint16_t*); // declare function pointer
-  SRAM_flash_seg_part_erase_4 = (void*)space;
+  SRAM_f_seg_part_erase_4 = malloc_subroutine(\
+      f_segment_partial_erase_4, end_f_segment_partial_erase_4);
+  if (!SRAM_f_seg_part_erase_4)
+    return 1; // not enough space on the heap
   
   //////////////////////////////
   // call SRAM copied function
   //////////////////////////////
-  event_timer_start();
-  SRAM_flash_seg_part_erase_4(bank_D_seg_0.startAddress);
-  event_timer_stop();
+  SRAM_f_seg_part_erase_4(bank_D_seg_0.startAddress);
 
-  free(space); // deallocate memory
+  free(SRAM_f_seg_part_erase_4); // deallocate memory
 
-  char outStr[64];
   sprintf(outStr, "Time of erase operation: %u uS\n", _event_timer_value);
   Serial0_write(outStr);
 
-  flash_stats_s bank_D_seg_0_stats;
-  flash_segment_stats(bank_D_seg_0, &bank_D_seg_0_stats, 0xFFFF);
-  sprintf(outStr, "------ Flash Stats ------\n");
-  Serial0_write(outStr);
-  sprintf(outStr, "Time to erase: %u uS\n", bank_D_seg_0_stats.erase_latency);
-  Serial0_write(outStr);
-  sprintf(outStr, "Time to write: %u uS\n", bank_D_seg_0_stats.write_latency);
-  Serial0_write(outStr);
-  sprintf(outStr, "Total bit errors: %u\n", bank_D_seg_0_stats.total_bit_errors);
-  Serial0_write(outStr);
-
-  while(1);
   return 0;
 }
 

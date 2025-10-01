@@ -136,7 +136,13 @@ MEMORY
 
 SECTIONS
 {
-    .flash_operations_section : {} > FLASH
+    .f_segment_partial_erase_4 : {} > FLASH
+    .f_word_partial_write_0 : {} > FLASH
+    .f_word_partial_write_4 : {} > FLASH
+    .f_word_partial_write_6 : {} > FLASH
+    .f_word_partial_write_8 : {} > FLASH
+    .f_word_partial_write_10 : {} > FLASH
+    .f_block_set : {} > FLASH
 
     .bss        : {} > RAM                  /* Global & static vars              */
     .data       : {} > RAM                  /* Global & static vars              */
